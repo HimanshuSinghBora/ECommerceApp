@@ -20,18 +20,18 @@ class _HomePageState extends State<HomePage> {
   Future getProductsApi () async {
     http.Response response;
     response = await http.get(Uri.parse('https://dummyjson.com/products'));
-   // var
+    // var
     if(response.statusCode==200){
       setState(() {
         mapResponse = json.decode(response.body);
         listResponse = mapResponse!["products"];
       });
-     }
-}
-void initState(){
+    }
+  }
+  void initState(){
     getProductsApi();
     super.initState();
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +48,12 @@ void initState(){
                   Container(
                       alignment:Alignment.topLeft,
                       child: Text('Super summer sale',style: TextStyle(color: Colors.black26,fontSize: 15),)),
-                Container(
-                  child: Expanded(
-                    child: _buildListViewWidget(context),
-                  ),
-                )
-            ]
+                  Container(
+                    child: Expanded(
+                      child: _buildListViewWidget(context),
+                    ),
+                  )
+                ]
             ),
           ),
         )
@@ -71,39 +71,41 @@ void initState(){
       );
     }
     return ListView.separated(
-              itemBuilder: (context, index) {
-                return InkWell(onTap:(){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage(index:index)));},
-                  child: Container(
-                    width: double.maxFinite,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                            height:100,
-                            width:200,
-                            child: Image.network(listResponse![index]['thumbnail'])),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(child: Text("Title: "+listResponse![index]['title'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
-                            Container(child: Text("Prize: \$"+listResponse![index]["price"].toString(),style: TextStyle(fontWeight: FontWeight.bold),)),
-                            Container(child: Text("Description: "+listResponse![index]['description'].substring(0,50)+"...........")),
-                          ],
-                        )
-
-                      ],
-                    ),
+      itemBuilder: (context, index) {
+        return InkWell(onTap:(){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage(index:index)));},
+          child: Container(
+            child: Row(
+              children: [
+                Container(
+                    child: Image.network(listResponse![index]['thumbnail'])),
+                SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Title: "+listResponse![index]['title'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                      Text("Prize: \$"+listResponse![index]["price"].toString(),style: TextStyle(fontWeight: FontWeight.bold),),
+                      Text("Description:"+listResponse![index]['description'].toString().substring(0,65)+"...........more"),
+                    ],
                   ),
-                );
-              },
+                )
+
+              ],
+            ),
+          ),
+        );
+      },
       itemCount: listResponse==null? 0 :listResponse!.length,
       separatorBuilder: (BuildContext context, int index) {
-       return SizedBox(
-         height: 5,
-       ) ;
+        return SizedBox(
+          height: 5,
+        ) ;
       },
-            );
+    );
   }
 
 }
